@@ -1,0 +1,31 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: wasm32-unknown-unknown }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      - name: Engine unit tests
+        run: cargo test -p flame-engine
+      - name: Build WebAssembly engine
+        run: |
+          cargo install wasm-pack --locked
+          cd web && npm ci && npm run wasm
+      - name: Fetch the published model (pinned commit)
+        run: |
+          base=$(grep VITE_MODEL_BASE web/.env.production | cut -d= -f2)
+          mkdir -p hf_export
+          for f in config.json flame_tokenizer.json model.safetensors metrics.jsonl; do curl -sfL -o hf_export/$f "${base}$f"; done
+      - name: WebAssembly engine reproduces FLAME's greedy output
+        run: node tools/wasm_smoke.mjs hf_export
+      - name: Typecheck, lint, unit tests, build
+        working-directory: web
+        run: npm run check && npm run lint && npm test && npm run build
+      - name: End-to-end + accessibility (axe, WCAG 2.1 AA)
+        working-directory: web
+        run: npx playwright install --with-deps chromium && npx playwright test

@@ -1,0 +1,13 @@
+target/
+**/target/
+node_modules/
+**/node_modules/
+web/dist/
+web/src/lib/wasm/pkg/
+hf_export/
+*.safetensors
+.env
+.env.local
+web/test-results/
+web/playwright-report/
+.DS_Store

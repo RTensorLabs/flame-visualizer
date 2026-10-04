@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLAME Visualizer · see inside a language model</title>
+    <meta
+      name="description"
+      content="Interactive visualizer for a 5.9M-parameter language model trained with FLAME. Runs in your browser and shows every value of the forward pass: embeddings, attention, SwiGLU neurons and next-token probabilities."
+    />
+    <meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0c0e" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="FLAME Visualizer" />
+    <meta property="og:description" content="See inside a small language model, one number at a time." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script>
+      (function () {
+        var t = localStorage.getItem('flame-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript
+      ><p style="padding: 24px; font-family: sans-serif">
+        The FLAME Visualizer runs a language model in your browser and needs JavaScript and WebAssembly.
+      </p></noscript
+    >
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
