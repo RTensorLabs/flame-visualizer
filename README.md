@@ -1,14 +1,11 @@
 # FLAME Visualizer
 
-**Live:** https://huggingface.co/spaces/Tejascodex001/flame-visualizer ·
-**Model:** https://huggingface.co/Tejascodex001/flame-tinystories-5m
+- **Live:** https://huggingface.co/spaces/Tejascodex001/flame-visualizer
+- **Model:** https://huggingface.co/Tejascodex001/flame-tinystories-5m
 
-An interactive look inside FLAME's TinyStories-5M language model. It runs the real trained model **in the browser** (Rust →
+An interactive look inside FLAME's language model. It runs the real trained model **in the browser** (Rust →
 WebAssembly) and visualises every value of the forward pass: token embeddings, Q/K/V, attention patterns, SwiGLU neurons, the
 residual stream (logit lens) and the next-token distribution.
-
-This project is **separate from FLAME** and never modifies it. It contains an independent inference engine whose results are
-checked against FLAME itself by automated parity tests, so the visualiser cannot silently drift from the real model.
 
 ## Layout
 
@@ -49,7 +46,7 @@ cargo test --manifest-path ../parity/Cargo.toml --release    # parity vs FLAME (
 
 ```bash
 uvx --from huggingface_hub hf auth login     # token with write access
-FLAME_DIR=../FLAME-main/FLAME HF_USER=Tejascodex001 tools/deploy.sh
+FLAME_DIR=../FLAME-main/FLAME HF_USER={HF_USER} tools/deploy.sh
 ```
 
 The site is a static bundle (~0.8 MB). The 23 MB model is served by the Hugging Face CDN, pinned to a commit
