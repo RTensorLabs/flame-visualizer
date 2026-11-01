@@ -40,6 +40,9 @@
   {/if}
 </main>
 <footer class="wrap">
+  <a class="lab-credit" href="https://github.com/RTensorLabs" rel="noopener" target="_blank"
+    ><img src="./brand/rtensorlabs-logo.png" width="24" height="24" alt="" />A project by RTensorLabs</a
+  >
   <p>
     TinyStories-5M, trained with <a href="https://github.com/RTensorLabs/FLAME" rel="noopener" target="_blank">FLAME</a>. Runs locally in
     your browser via WebAssembly; nothing you type leaves your device.
@@ -58,6 +61,17 @@
     position: relative;
     z-index: 1;
     outline: none;
+  }
+  .lab-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .lab-credit img {
+    object-fit: contain;
   }
   footer {
     position: relative;

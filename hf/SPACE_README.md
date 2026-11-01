@@ -20,6 +20,8 @@ tags:
   - education
 ---
 
+<p align="center"><img src="https://huggingface.co/spaces/Tejascodex001/flame-visualizer/resolve/main/brand/flame-logo.png" width="96" alt="FLAME logo" /></p>
+
 # FLAME Visualizer
 
 An interactive look inside [FLAME TinyStories-5M](https://huggingface.co/Tejascodex001/flame-tinystories-5m), a small

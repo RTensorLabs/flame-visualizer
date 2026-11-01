@@ -52,3 +52,15 @@ FLAME_DIR=../FLAME-main/FLAME HF_USER={HF_USER} tools/deploy.sh
 The site is a static bundle (~0.8 MB). The 23 MB model is served by the Hugging Face CDN, pinned to a commit
 (`web/.env.production`), and cached in the browser after the first visit. The same `web/dist` folder can be hosted on any static
 host (Cloudflare Pages, Vercel, GitHub Pages) without changes.
+
+### Publish website-only changes
+
+The `ci` workflow can also be run manually from `main`. It builds and tests the
+existing pinned model and website, then publishes only the static Space files.
+It does not export or upload a model. Add `HF_TOKEN` as a repository Actions
+secret with write access to `Tejascodex001/flame-visualizer`, then use **Actions →
+ci → Run workflow → main**. Ordinary pushes and pull requests run checks without
+receiving the Hugging Face credential or publishing anything.
+
+The shared logo marks are in `web/public/brand/`; the Space header, footer,
+favicon, and Space README use those same files.

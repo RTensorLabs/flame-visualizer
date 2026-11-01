@@ -1,10 +1,25 @@
 name: ci
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Check the website publishing credential
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo "::error::Add the repository Actions secret HF_TOKEN with write access to Tejascodex001/flame-visualizer, then run ci from main again."
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with: { targets: wasm32-unknown-unknown }
@@ -14,7 +29,7 @@ jobs:
         run: cargo test -p flame-engine
       - name: Build WebAssembly engine
         run: |
-          cargo install wasm-pack --locked
+          cargo install wasm-pack --version 0.15.1 --locked
           cd web && npm ci && npm run wasm
       - name: Fetch the published model (pinned commit)
         run: |
@@ -29,3 +44,21 @@ jobs:
       - name: End-to-end + accessibility (axe, WCAG 2.1 AA)
         working-directory: web
         run: npx playwright install --with-deps chromium && npx playwright test
+
+      - name: Install the website publisher
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+        run: python3 -m pip install --quiet 'huggingface_hub==2.4.0'
+      - name: Publish the tested website to Hugging Face
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo "::error::Add a repository secret named HF_TOKEN with write access to Tejascodex001/flame-visualizer, then run this workflow manually from main."
+            exit 1
+          fi
+          space_stage_dir=$(mktemp -d)
+          cp -R web/dist/. "$space_stage_dir/"
+          cp hf/SPACE_README.md "$space_stage_dir/README.md"
+          hf upload Tejascodex001/flame-visualizer "$space_stage_dir" . --repo-type space --delete 'assets/*' --commit-message "Update FLAME visualizer branding"
+          rm -rf "$space_stage_dir"

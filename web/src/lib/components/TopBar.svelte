@@ -17,13 +17,7 @@
 <header class="top">
   <div class="wrap bar">
     <a class="brand" href="#/overview" aria-label="FLAME Visualizer home">
-      <span class="logo" aria-hidden="true">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"
-          ><path
-            d="M12 2c.6 3.2 3.4 5 5 7.6 1.2 2 1.4 4.3.6 6.2A6.5 6.5 0 0 1 12 20.5a6.5 6.5 0 0 1-5.6-4.7c-.6-1.8-.2-3.7.9-5.2.2 1.2.8 2 1.6 2.4C8.6 9 10.3 5 12 2z"
-          /></svg
-        >
-      </span>
+      <img class="logo" src="./brand/flame-logo.png" width="32" height="32" alt="" />
       FLAME <span class="faint">Visualizer</span>
     </a>
     <nav aria-label="Primary">
@@ -98,13 +92,10 @@
     font-weight: 450;
   }
   .logo {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #f97316, #dc2626);
-    display: grid;
-    place-items: center;
-    box-shadow: 0 2px 8px rgb(234 88 12 / 0.35);
+    width: 32px;
+    height: 32px;
+    flex: none;
+    object-fit: contain;
   }
   ul {
     display: flex;
