@@ -14,12 +14,37 @@ jobs:
       - name: Check the website publishing credential
         if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.hugging_face }}
         run: |
-          if [ -z "${HF_TOKEN:-}" ]; then
-            echo "::error::Add the repository Actions secret HF_TOKEN with write access to Tejascodex001/flame-visualizer, then run ci from main again."
-            exit 1
-          fi
+          python3 - <<'PYTHON'
+          import json
+          import os
+          import sys
+          import urllib.error
+          import urllib.request
+
+          credential = os.environ.get('HF_TOKEN', '').strip()
+          if not credential:
+              print('::error::The repository Actions secret hugging_face is unavailable.')
+              sys.exit(1)
+          request = urllib.request.Request(
+              'https://huggingface.co/api/whoami-v2',
+              headers={'Authorization': 'Bearer ' + credential},
+          )
+          try:
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  identity = json.load(response)
+          except urllib.error.HTTPError as error:
+              print(f'::error::Hugging Face rejected the saved publishing credential (HTTP {error.code}). Check the hugging_face repository secret.')
+              sys.exit(1)
+          if identity.get('name', '').casefold() != 'Tejascodex001'.casefold():
+              print('::error::The saved credential must belong to the Tejascodex001 account that owns the Space.')
+              sys.exit(1)
+          if identity.get('auth', {}).get('accessToken', {}).get('role') == 'read':
+              print('::error::The saved credential is read-only. Publishing needs write access to Tejascodex001/flame-visualizer.')
+              sys.exit(1)
+          print('Publishing credential authenticated for Tejascodex001. Space write access will be checked during upload.')
+          PYTHON
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with: { targets: wasm32-unknown-unknown }
@@ -51,10 +76,10 @@ jobs:
       - name: Publish the tested website to Hugging Face
         if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.hugging_face }}
         run: |
           if [ -z "${HF_TOKEN:-}" ]; then
-            echo "::error::Add a repository secret named HF_TOKEN with write access to Tejascodex001/flame-visualizer, then run this workflow manually from main."
+            echo "::error::Add a repository secret named hugging_face with write access to Tejascodex001/flame-visualizer, then run this workflow manually from main."
             exit 1
           fi
           space_stage_dir=$(mktemp -d)

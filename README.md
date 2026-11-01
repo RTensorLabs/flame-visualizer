@@ -57,7 +57,7 @@ host (Cloudflare Pages, Vercel, GitHub Pages) without changes.
 
 The `ci` workflow can also be run manually from `main`. It builds and tests the
 existing pinned model and website, then publishes only the static Space files.
-It does not export or upload a model. Add `HF_TOKEN` as a repository Actions
+It does not export or upload a model. Add `hugging_face` as a repository Actions
 secret with write access to `Tejascodex001/flame-visualizer`, then use **Actions →
 ci → Run workflow → main**. Ordinary pushes and pull requests run checks without
 receiving the Hugging Face credential or publishing anything.
