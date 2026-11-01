@@ -18,7 +18,7 @@
   <div class="wrap bar">
     <a class="brand" href="#/overview" aria-label="FLAME Visualizer home">
       <img class="logo" src="./brand/flame-logo.png" width="32" height="32" alt="" />
-      FLAME <span class="faint">Visualizer</span>
+      <span class="brand-name">FLAME</span><span class="faint">Visualizer</span>
     </a>
     <nav aria-label="Primary">
       <ul>
@@ -173,7 +173,20 @@
     }
   }
   @media (max-width: 560px) {
+    .bar {
+      gap: 8px;
+    }
+    nav a {
+      padding: 6px 8px;
+      min-height: 36px;
+      font-size: 12px;
+    }
     .chip {
+      display: none;
+    }
+  }
+  @media (max-width: 380px) {
+    .brand-name {
       display: none;
     }
   }
